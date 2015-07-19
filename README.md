@@ -1,4 +1,4 @@
 ExPosta
 =======
 
-Postarm API client library for Elixir
+Postmark API client library for Elixir
