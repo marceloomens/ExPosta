@@ -9,7 +9,7 @@ defmodule ExPosta do
   ]
 
   defp process(response) do
-    {:ok, body} = JSX.decode(response.body)
+    {:ok, body} = Poison.decode(response.body)
     case response.status_code do
       200 ->
         {:ok, body["Message"]}
@@ -25,13 +25,13 @@ defmodule ExPosta do
 
   # Do I need several strategies, including async, await, etc?
   def send(to, subject, textBody, htmlBody) do
-    {:ok, json} = JSX.encode %{
+    {:ok, json} = Poison.encode(%{
       "from"      => Application.get_env(:postmark, :from_email),
       "to"        => to,
       "subject"   => subject,
       "textBody"  => textBody,
       "htmlBody"  => htmlBody
-    }
+    })
     HTTPotion.post(@endpoint, [body: json, headers: @headers])
     |> process
   end
