@@ -1,11 +1,11 @@
 defmodule ExPosta do
 
-  @endpoint Application.get_env(:postmark, :api_endpoint)
+  @endpoint Application.get_env(:exposta, :api_endpoint)
 
   @headers [
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "X-Postmark-Server-Token": Application.get_env(:postmark, :server_token),
+    {"Accept", "application/json"},
+    {"Content-Type", "application/json"},
+    {"X-Postmark-Server-Token", Application.get_env(:exposta, :server_token)}
   ]
 
   defp process(response) do
@@ -26,14 +26,14 @@ defmodule ExPosta do
   # Do I need several strategies, including async, await, etc?
   def send(to, subject, textBody, htmlBody) do
     {:ok, json} = Poison.encode(%{
-      "from"      => Application.get_env(:postmark, :from_email),
+      "from"      => Application.get_env(:exposta, :from_email),
       "to"        => to,
       "subject"   => subject,
       "textBody"  => textBody,
       "htmlBody"  => htmlBody
     })
-    HTTPotion.post(@endpoint, [body: json, headers: @headers])
-    |> process
+    {:ok, response} = HTTPoison.post(@endpoint, json, @headers)
+    process response
   end
 
 end

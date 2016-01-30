@@ -24,6 +24,6 @@ use Mix.Config
 #     import_config "#{Mix.env}.exs"
 
 # Keep the server token out of your repo; update from_email
-config :postmark, api_endpoint: "https://api.postmarkapp.com/email"
-config :postmark, server_token: "POSTMARK_API_TEST"
-config :postmark, from_email: "John Doe <email@example.com>"
+config :exposta, api_endpoint: "https://api.postmarkapp.com/email"
+config :exposta, server_token: "POSTMARK_API_TEST"
+config :exposta, from_email: "John Doe <email@example.com>"
