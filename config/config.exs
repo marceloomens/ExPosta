@@ -27,3 +27,4 @@ use Mix.Config
 config :exposta, api_endpoint: "https://api.postmarkapp.com/email"
 config :exposta, server_token: "POSTMARK_API_TEST"
 config :exposta, from_email: "John Doe <email@example.com>"
+config :exposta, reply_to_email: "John Doe <email@example.com>"
