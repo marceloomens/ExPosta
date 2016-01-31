@@ -9,26 +9,17 @@ defmodule ExPosta do
     {"X-Postmark-Server-Token", Application.get_env(:exposta, :server_token)}
   ]
 
-  defp process(response) do
-    {:ok, body} = Poison.decode(response.body)
-    case response.status_code do
-      200 ->
-        {:ok, body["Message"]}
-      401 ->
-        {:error, body["Message"]}
-      422 ->
-        # Unprocessible entity needs further inspection
-        {:error, body["Message"]}
-      500 ->
-        {:error, body["Message"]}
-    end
-  end
-
-  # Do I need several strategies, including async, await, etc?
   def send(msg=%Message{}) do
     payload = Message.encode msg
-    {:ok, resp} = HTTPoison.post(@endpoint, payload, @headers)
-    process resp
+    response = HTTPoison.post!(@endpoint, payload, @headers)
+    case response.status_code do
+      200 ->
+        {:ok, Poison.decode!(response.body)}
+      422 ->
+        {:error, Poison.decode!(response.body)}
+      _ ->
+        {:error, response.status_code}
+    end
   end
 
 end
