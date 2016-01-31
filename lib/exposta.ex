@@ -9,9 +9,8 @@ defmodule ExPosta do
     {"X-Postmark-Server-Token", Application.get_env(:exposta, :server_token)}
   ]
 
-  def send(msg=%Message{}) do
-    payload = Message.encode msg
-    response = HTTPoison.post!(@endpoint, payload, @headers)
+  defp deliver(payload) do
+    response = HTTPoison.post!(@endpoint, Poison.encode!(payload), @headers)
     case response.status_code do
       200 ->
         {:ok, Poison.decode!(response.body)}
@@ -20,6 +19,10 @@ defmodule ExPosta do
       _ ->
         {:error, response.status_code}
     end
+  end
+
+  def send(msg=%Message{}) do
+    Task.async(fn -> deliver(msg) end)
   end
 
 end

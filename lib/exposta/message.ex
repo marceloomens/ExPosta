@@ -20,14 +20,26 @@ defmodule ExPosta.Message do
     attachments:  []
   )
 
+  def new(text \\ "", opts \\ []) do
+    msg = %Message{ "text": text }
+    Keyword.take(opts, Map.keys(msg))
+    |> Map.new
+    |> Map.merge(msg, fn _,v,_ -> v end)
+  end
+end
+
+defimpl Poison.Encoder, for: ExPosta.Message do
+
+  alias Poison.Encoder
+  alias ExPosta.Message
+
   # There must be a built-in function to do just this...
   defp concat([]), do: ""
   defp concat([head|[]]), do: head
   defp concat([head|tail]), do: head <> "," <> concat(tail)
 
-  def encode(msg=%Message{}) do
-    # I don't like this 1-to-1 mapping of my struct to a map at all
-    Poison.encode!(%{
+  def encode(msg=%Message{}, options) do
+    Encoder.encode(%{
       "From"        => msg.from,
       "To"          => concat(msg.to),
       "Cc"          => concat(msg.cc),
@@ -40,13 +52,6 @@ defmodule ExPosta.Message do
       "Headers"     => msg.headers,
       "TrackOpen"   => msg.track_opens,
       "Attachments" => msg.attachments
-    })
-  end
-
-  def new(text \\ "", opts \\ []) do
-    msg = %Message{ "text": text }
-    Keyword.take(opts, Map.keys(msg))
-    |> Map.new
-    |> Map.merge(msg, fn k,v,_ -> v end)
+    }, options)
   end
 end
