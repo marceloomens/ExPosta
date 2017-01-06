@@ -20,8 +20,8 @@ defmodule ExPosta.Message do
     attachments:  []
   )
 
-  def new(text \\ "", opts \\ []) do
-    msg = %Message{ "text": text }
+  def new(opts \\ []) do
+    msg = %Message{}
     Keyword.take(opts, Map.keys(msg))
     |> Map.new
     |> Map.merge(msg, fn _,v,_ -> v end)
