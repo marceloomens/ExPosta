@@ -2,11 +2,8 @@ defmodule ExPosta.Message do
 
   alias ExPosta.Message
 
-  @from_email Application.get_env(:exposta, :from_email)
-  @reply_to_email Application.get_env(:exposta, :reply_to_email)
-
   defstruct(
-    from:         @from_email,
+    from:         Application.get_env(:exposta, :from_email),
     to:           [],
     cc:           [],
     bcc:          [],
@@ -14,7 +11,7 @@ defmodule ExPosta.Message do
     tag:          "",
     html:         "",
     text:         "",
-    reply_to:     @reply_to_email,
+    reply_to:     Application.get_env(:exposta, :reply_to_email),
     headers:      [],
     track_opens:  true,
     attachments:  []
