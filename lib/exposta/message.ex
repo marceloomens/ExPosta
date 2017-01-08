@@ -45,7 +45,7 @@ defimpl Poison.Encoder, for: ExPosta.Message do
       "Tag"         => msg.tag,
       "HtmlBody"    => msg.html,
       "TextBody"    => msg.text,
-      "Reply_to"    => msg.reply_to,
+      "ReplyTo"     => msg.reply_to,
       "Headers"     => msg.headers,
       "TrackOpen"   => msg.track_opens,
       "Attachments" => msg.attachments
